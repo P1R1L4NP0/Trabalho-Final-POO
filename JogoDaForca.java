@@ -22,9 +22,31 @@ class ArquivoUtil {
     public static void salvarPontuacao(String nome, int pontos) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("pontuacao.txt", true))) {
             writer.write(nome + ": " + pontos + " pontos");
-            writer.newLine();
+            writer.newLine();            
         } catch (IOException e) {
             System.out.println("Erro ao salvar pontuação.");
+        }
+    }
+
+    // Método para exibir ranking
+    public static void exibirRanking() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("pontuacao.txt"))) {
+            String linha;
+            List<String> ranking = new ArrayList<>();
+            while ((linha = reader.readLine()) != null) {
+                ranking.add(linha);
+            }
+
+            if (ranking.isEmpty()) {
+                System.out.println("Nenhuma pontuação registrada.");
+            } else {
+                System.out.println("\n--- Ranking ---");
+                for (String pontuacao : ranking) {
+                    System.out.println(pontuacao);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo de pontuação.");
         }
     }
 }
@@ -106,5 +128,8 @@ public class JogoDaForca {
 
         System.out.println("Pontuação final de " + jogador.getNome() + ": " + jogador.getPontos());
         ArquivoUtil.salvarPontuacao(jogador.getNome(), jogador.getPontos());
+
+        // Exibir o ranking após a partida
+        ArquivoUtil.exibirRanking();
     }
 }
